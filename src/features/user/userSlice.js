@@ -6,7 +6,16 @@ import { initialCart } from "../cart/cartSlice";
 
 export const loginWithEmail = createAsyncThunk(
   "user/loginWithEmail",
-  async ({ email, password }, { rejectWithValue }) => {}
+  async ({ email, password }, { rejectWithValue }) => {
+    try{
+      const response = await api.post('/auth/login', {email,password});
+      sessionStorage.setItem("token",response.data.token)
+      return response.data;
+    } catch(error){
+      // 실패시 생긴 에러값을 reducer에 저장
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const loginWithGoogle = createAsyncThunk(
@@ -23,7 +32,6 @@ export const registerUser = createAsyncThunk(
     { dispatch, rejectWithValue }
   ) => {
     try{
-      console.log("HIHI");
       const response = await api.post('/user',{email,name,password});
       // 1. 성공 토스트 메세지 보여주기
       // 2. 로그인 페이지로 리다이렉트
@@ -39,10 +47,7 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const loginWithToken = createAsyncThunk(
-  "user/loginWithToken",
-  async (_, { rejectWithValue }) => {}
-);
+export const loginWithToken = createAsyncThunk("user/loginWithToken",{});
 
 const userSlice = createSlice({
   name: "user",
@@ -62,14 +67,30 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(registerUser.pending,(state)=>{
       state.loading=true;
+      state.registrationError=null;
     })
     .addCase(registerUser.fulfilled,(state)=>{
       state.loading=false;
       state.registrationError=null;
     })
     .addCase(registerUser.rejected,(state, action)=>{
+      state.loading=false;
       state.registrationError = action.payload;
-    });
+
+    })
+    .addCase(loginWithEmail.pending, (state)=>{
+      state.loading = true;
+    })
+    .addCase(loginWithEmail.fulfilled, (state,action)=>{
+      state.loading = false;
+      console.log(action.payload.user);
+      state.user = action.payload.user;
+      state.loginError = null;
+    })
+    .addCase(loginWithEmail.rejected, (state,action)=>{
+      state.loading = false;
+      state.loginError = action.payload;
+    })
   },
 });
 export const { clearErrors } = userSlice.actions;

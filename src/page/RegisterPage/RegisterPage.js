@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import "./style/register.style.css";
 
 import { registerUser } from "../../features/user/userSlice";
+import { clearErrors } from "../../features/user/userSlice";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
@@ -19,8 +20,13 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const [passwordError, setPasswordError] = useState("");
   const [policyError, setPolicyError] = useState(false);
+  
   const { registrationError } = useSelector((state) => state.user);
-
+  useEffect(()=>{
+      if (registrationError){
+        dispatch(clearErrors());
+      }
+    },[navigate]);
   const register = (event) => {
     event.preventDefault();
     const { name, email, password, confirmPassword, policy } = formData;
