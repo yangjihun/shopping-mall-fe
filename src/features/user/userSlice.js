@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
 import { showToastMessage } from "../common/uiSlice";
 import api from "../../utils/api";
 import { initialCart } from "../cart/cartSlice";
@@ -9,7 +8,7 @@ export const loginWithEmail = createAsyncThunk(
   async ({ email, password }, { rejectWithValue }) => {
     try{
       const response = await api.post('/auth/login', {email,password});
-      sessionStorage.setItem("token",response.data.token)
+      sessionStorage.setItem("token",response.data.token);
       return response.data;
     } catch(error){
       // 실패시 생긴 에러값을 reducer에 저장
@@ -23,7 +22,14 @@ export const loginWithGoogle = createAsyncThunk(
   async (token, { rejectWithValue }) => {}
 );
 
-export const logout = () => (dispatch) => {};
+export const logout = () => async(dispatch) => {
+  try{
+    sessionStorage.clear();
+    dispatch(clearUser());
+  } catch(error){
+    console.error('Logout error: ',error);
+  }
+};
 
 export const registerUser = createAsyncThunk(
   "user/registerUser",
@@ -47,7 +53,17 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const loginWithToken = createAsyncThunk("user/loginWithToken",{});
+export const loginWithToken = createAsyncThunk(
+  "user/loginWithToken",
+  async (_,{rejectWithValue}) => {
+    try{
+      const response = await api.get('/user/me');
+      return response.data;
+    } catch(error){
+      return rejectWithValue(error.error);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -63,6 +79,9 @@ const userSlice = createSlice({
       state.loginError = null;
       state.registrationError = null;
     },
+    clearUser: (state) => {
+      state.user = null;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(registerUser.pending,(state)=>{
@@ -83,7 +102,6 @@ const userSlice = createSlice({
     })
     .addCase(loginWithEmail.fulfilled, (state,action)=>{
       state.loading = false;
-      console.log(action.payload.user);
       state.user = action.payload.user;
       state.loginError = null;
     })
@@ -91,7 +109,10 @@ const userSlice = createSlice({
       state.loading = false;
       state.loginError = action.payload;
     })
+    .addCase(loginWithToken.fulfilled,(state,action)=>{
+      state.user = action.payload.user;
+    })
   },
 });
-export const { clearErrors } = userSlice.actions;
+export const { clearErrors, clearUser } = userSlice.actions;
 export default userSlice.reducer;
