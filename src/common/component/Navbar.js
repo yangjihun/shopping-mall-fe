@@ -74,7 +74,7 @@ const Navbar = ({ user }) => {
         </div>
       </div>
       {user && user.level === "admin" && (
-        <Link to="/admin/product?page=1" className="link-area">
+        <Link to="/admin/product?page=1" className="link-area text-black">
           Admin page
         </Link>
       )}
