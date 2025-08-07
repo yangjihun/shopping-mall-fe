@@ -71,22 +71,6 @@ const AdminProductPage = () => {
     setSearchQuery({...searchQuery, page: selected + 1});
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <ColorRing
-          visible={true}
-          height="80"
-          width="80"
-          ariaLabel="blocks-loading"
-          wrapperStyle={{}}
-          wrapperClass="blocks-wrapper"
-          colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="locate-center">
       <Container>
@@ -101,13 +85,25 @@ const AdminProductPage = () => {
         <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
           Add New Item +
         </Button>
-
+        {!loading ?
         <ProductTable
           header={tableHeader}
           data={productList}
           deleteItem={deleteItem}
           openEditForm={openEditForm}
-        />
+        /> :
+        <div className="flex justify-center items-center h-64">
+          <ColorRing
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="blocks-loading"
+            wrapperStyle={{}}
+            wrapperClass="blocks-wrapper"
+            colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+          />
+        </div>
+        }
         <ReactPaginate
           nextLabel="next >"
           onPageChange={handlePageClick}
