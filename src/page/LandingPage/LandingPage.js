@@ -5,10 +5,14 @@ import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductList } from "../../features/product/productSlice";
 import { ColorRing } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
 
+  let navigate = useNavigate();
   const productList = useSelector((state) => state.product.productList);
   const loading = useSelector((state) => state.product.loading);
   const [query] = useSearchParams();
@@ -20,6 +24,15 @@ const LandingPage = () => {
       })
     );
   }, [query]);
+
+  const onCheckEnter = (event) => {
+    if (event.key === "Enter") {
+      if (event.target.value === "") {
+        return navigate("/");
+      }
+      navigate(`?name=${event.target.value}`);
+    }
+  };
 
   if (loading) {
     return (
@@ -39,6 +52,19 @@ const LandingPage = () => {
 
   return (
     <Container>
+      
+      <div className="flex items-center justify-center w-full">
+      <div className="flex items-center gap-2 landing-search-box w-80 md:w-[560px] border-black border-2 rounded-xl my-4 px-3 py-2">
+        <FontAwesomeIcon icon={faSearch} />
+        <input
+          type="text"
+          placeholder="제품검색"
+          onKeyPress={onCheckEnter}
+          className="w-full outline-none"
+        />
+      </div>
+    </div>
+
       <Row>
         {productList.length > 0 ? (
           productList.map((item) => (
