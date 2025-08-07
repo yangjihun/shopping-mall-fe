@@ -31,10 +31,15 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const [stock, setStock] = useState([]);
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
+  const [skuError, setSkuError] = useState(false);
 
   useEffect(() => {
     if (success) setShowDialog(false);
   }, [success]);
+
+  useEffect(() => {
+    if (error?.startsWith('E11000')) setSkuError(true);
+  }, [error]);
 
   useEffect(() => {
     if (error || !success) {
@@ -65,6 +70,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setSkuError(false);
     //재고를 입력했는지 확인, 아니면 에러
     if (stock.length === 0) return setStockError(true);
     // 재고를 배열에서 객체로 바꿔주기
@@ -143,11 +149,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
           <Modal.Title>Edit Product</Modal.Title>
         )}
       </Modal.Header>
-      {error && (
-        <div className="error-message">
-          <Alert variant="danger">{error}</Alert>
-        </div>
-      )}
       <Form className="form-container" onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Form.Group as={Col} controlId="sku">
@@ -159,6 +160,9 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
               required
               value={formData.sku}
             />
+            {skuError && (
+              <span className="error-message">해당 Sku는 이미 존재합니다</span>
+            )}
           </Form.Group>
 
           <Form.Group as={Col} controlId="name">
