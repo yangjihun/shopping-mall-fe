@@ -84,6 +84,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
       dispatch(createProduct({...formData,stock:totalStock}));
     } else {
       // 상품 수정하기
+      dispatch(editProduct({...formData, stock:totalStock, id: selectedProduct._id}))
     }
   };
 
@@ -234,6 +235,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                     type="number"
                     placeholder="number of stock"
                     value={item[1]}
+                    min={0}
                     required
                   />
                 </Col>
@@ -268,6 +270,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
             <Form.Label>Price</Form.Label>
             <Form.Control
               value={formData.price}
+              min={0}
               required
               onChange={handleChange}
               type="number"
