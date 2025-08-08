@@ -11,6 +11,7 @@ import { addToCart } from "../../features/cart/cartSlice";
 const ProductDetail = () => {
   const dispatch = useDispatch();
   const { selectedProduct, loading } = useSelector((state) => state.product);
+  console.log(selectedProduct);
   const [size, setSize] = useState("");
   const { id } = useParams();
   const [sizeError, setSizeError] = useState(false);
@@ -24,6 +25,7 @@ const ProductDetail = () => {
   };
   const selectSize = (value) => {
     // 사이즈 추가하기
+    setSize(value);
   };
 
   useEffect(() => {
