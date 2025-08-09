@@ -32,6 +32,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
   const [skuError, setSkuError] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     if (success) setShowDialog(false);
@@ -73,6 +74,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     setSkuError(false);
     //재고를 입력했는지 확인, 아니면 에러
     if (stock.length === 0) return setStockError(true);
+    if (!formData.image) return setImageError(true);
     // 재고를 배열에서 객체로 바꿔주기
     const totalStock = stock.reduce((total,item)=>{
       return {...total,[item[0]]:parseInt(item[1])}
@@ -256,7 +258,8 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
         <Form.Group className="mb-3" controlId="Image" required>
           <Form.Label>Image</Form.Label>
           <CloudinaryUploadWidget uploadImage={uploadImage} />
-
+          {imageError &&
+          <span className="error-message">이미지를 추가해주세요</span>}
           <img
             id="uploadedimage"
             src={formData.image}
