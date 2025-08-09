@@ -67,6 +67,8 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     setFormData(InitialFormData);
     // 다이얼로그 닫아주기
     setShowDialog(false);
+    setSkuError(false);
+    setImageError(false);
   };
 
   const handleSubmit = (event) => {
@@ -141,6 +143,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const uploadImage = (url) => {
     //이미지 업로드
     setFormData({...formData,image:url});
+    setImageError(false);
   };
 
   return (
