@@ -17,7 +17,6 @@ export const addToCart = createAsyncThunk(
   async ({ id, size }, { rejectWithValue, dispatch }) => {
     try{
       const response = await api.post('/cart', {productId:id, size, qty:1});
-      if (response.status!==200) throw new Error(response.error);
       dispatch(showToastMessage({message:'카트에 아이템이 추가됐습니다', status:'success'}));
       return response.data.cartItemQty;
     } catch(error){
@@ -32,7 +31,14 @@ export const addToCart = createAsyncThunk(
 
 export const getCartList = createAsyncThunk(
   "cart/getCartList",
-  async (_, { rejectWithValue, dispatch }) => {}
+  async (_, { rejectWithValue, dispatch }) => {
+    try{
+      const response = await api.get('/cart');
+      return response.data.data;
+    } catch(error){
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const deleteCartItem = createAsyncThunk(
@@ -42,7 +48,14 @@ export const deleteCartItem = createAsyncThunk(
 
 export const updateQty = createAsyncThunk(
   "cart/updateQty",
-  async ({ id, value }, { rejectWithValue }) => {}
+  async ({ id, size, value }, { rejectWithValue }) => {
+    try{
+      const response = await api.put('/cart', {cartItemId:id, qty:value});
+      return response.data.data;
+    } catch(error){
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const getCartQty = createAsyncThunk(
@@ -70,6 +83,40 @@ const cartSlice = createSlice({
         state.cartItemCount = action.payload;
       })
       .addCase(addToCart.rejected,(state,action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getCartList.pending,(state,action)=>{
+        state.loading = true;
+      })
+      .addCase(getCartList.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.error = '';
+        state.cartList = action.payload;
+        state.totalPrice = action.payload.reduce(
+          (total,item) => total + item.productId.price * item.qty,
+          0
+        );
+        state.cartItemCount = action.payload.length;
+      })
+      .addCase(getCartList.rejected,(state,action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateQty.pending,(state,action)=>{
+        state.loading = true;
+      })
+      .addCase(updateQty.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.error = '';
+        state.cartList = action.payload;
+        state.totalPrice = action.payload.reduce(
+          (total,item) => total + item.productId.price * item.qty,
+          0
+        );
+        state.cartItemCount = action.payload.length;
+      })
+      .addCase(updateQty.rejected,(state,action)=>{
         state.loading = false;
         state.error = action.payload;
       })
