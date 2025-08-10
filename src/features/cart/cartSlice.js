@@ -18,7 +18,8 @@ export const addToCart = createAsyncThunk(
     try{
       const response = await api.post('/cart', {productId:id, size, qty:1});
       dispatch(showToastMessage({message:'카트에 아이템이 추가됐습니다', status:'success'}));
-      return response.data.cartItemQty;
+      dispatch(getCartQty());
+      return response.data.data;
     } catch(error){
       if (error.error==='아이템이 이미 카트에 존재합니다') {
         dispatch(showToastMessage({message:error.error, status:'error'}));
@@ -95,7 +96,6 @@ const cartSlice = createSlice({
       .addCase(addToCart.fulfilled,(state,action) => {
         state.loading = false;
         state.error = '';
-        state.cartItemCount = action.payload;
       })
       .addCase(addToCart.rejected,(state,action) => {
         state.loading = false;

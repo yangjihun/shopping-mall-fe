@@ -26,6 +26,7 @@ export const logout = () => async(dispatch) => {
   try{
     sessionStorage.clear();
     dispatch(clearUser());
+    dispatch(initialCart());
   } catch(error){
     console.error('Logout error: ',error);
   }
