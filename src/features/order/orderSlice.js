@@ -18,10 +18,13 @@ export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (payload, { dispatch, rejectWithValue }) => {
     try{
-      const response = await api.post('/',payload);
+      const response = await api.post('/order',payload);
+      dispatch(getCartQty());
+      dispatch(showToastMessage({status:'success', message: '주문이 완료되었습니다'}));
       return response.data.orderNum;
     } catch(error){
-      return rejectWithValue(showToastMessage({status:'error', message:error.error}));
+      dispatch(showToastMessage({status:'error', message: error.error}));
+      return rejectWithValue(error.error);
     }
   }
 );
