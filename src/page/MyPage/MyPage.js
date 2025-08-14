@@ -12,6 +12,7 @@ const MyPage = () => {
   console.log(orderList);
   useEffect(() => {
     dispatch(getOrder());
+    console.log('ooo',orderList);
   }, [dispatch]);
 
   if (orderList?.length === 0) {
