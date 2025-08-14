@@ -9,38 +9,40 @@ const OrderTable = ({ header, data, openEditForm }) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            {header.map((title) => (
-              <th>{title}</th>
+            {header.map((title, idx) => (
+              <th key={idx}>{title}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {data.length > 0 ? (
             data.map((item, index) => (
-              <tr onClick={() => openEditForm(item)}>
-                <th>{index}</th>
-                <th>{item.orderNum}</th>
-                <th>{item.createdAt.slice(0, 10)}</th>
-                <th>{item.userId.email}</th>
+              <tr key={item._id || item.orderNum || index} onClick={() => openEditForm(item)}>
+                <td>{index}</td>
+                <td>{item.orderNum}</td>
+                <td>{item.createdAt.slice(0, 10)}</td>
+                <td>{item.userId.email}</td>
                 {item.items.length > 0 ? (
-                  <th>
+                  <td>
                     {item.items[0].productId.name}
                     {item.items.length > 1 && `외 ${item.items.length - 1}개`}
-                  </th>
+                  </td>
                 ) : (
-                  <th></th>
+                  <td></td>
                 )}
 
-                <th>{item.shipTo.address + " " + item.shipTo.city}</th>
+                <td>{item.shipTo.address + " " + item.shipTo.city}</td>
 
-                <th>{currencyFormat(item.totalPrice)}</th>
-                <th>
+                <td>{currencyFormat(item.totalPrice)}</td>
+                <td>
                   <Badge bg={badgeBg[item.status]}>{item.status}</Badge>
-                </th>
+                </td>
               </tr>
             ))
           ) : (
-            <tr>No Data to show</tr>
+            <tr>
+              <td>No Data to show</td>
+            </tr>
           )}
         </tbody>
       </Table>

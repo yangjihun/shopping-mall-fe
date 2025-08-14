@@ -43,12 +43,28 @@ export const getOrder = createAsyncThunk(
 
 export const getOrderList = createAsyncThunk(
   "order/getOrderList",
-  async (query, { rejectWithValue, dispatch }) => {}
+  async (query, { rejectWithValue, dispatch }) => {
+    try{
+      const response = await api.get('/order/admin',{params: {...query}});
+      return response.data;
+    } catch(error){
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const updateOrder = createAsyncThunk(
   "order/updateOrder",
-  async ({ id, status }, { dispatch, rejectWithValue }) => {}
+  async ({ id, status, searchQuery }, { dispatch, rejectWithValue }) => {
+    try{
+      const response = await api.put(`/order/${id}`,{stat:status});
+      dispatch(getOrderList(searchQuery));
+      dispatch(showToastMessage({status:'success',message:'status 변경을 완료했습니다'}));
+      return response.data.data;
+    } catch(error){
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 // Order slice
@@ -83,6 +99,30 @@ const orderSlice = createSlice({
         state.error = '';
       })
       .addCase(getOrder.rejected,(state,action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getOrderList.pending,(state,action)=>{
+        state.loading = true;
+      })
+      .addCase(getOrderList.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.orderList = action.payload.data;
+        state.totalPageNum = action.payload.totalPageNum;
+        state.error = '';
+      })
+      .addCase(getOrderList.rejected,(state,action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateOrder.pending,(state,action)=>{
+        state.loading = true;
+      })
+      .addCase(updateOrder.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.error = '';
+      })
+      .addCase(updateOrder.rejected,(state,action)=>{
         state.loading = false;
         state.error = action.payload;
       })
