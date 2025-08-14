@@ -13,20 +13,19 @@ const Sidebar = () => {
 
   const NavbarContent = () => {
     return (
-      <div>
+      <div className="bg-black">
         <Link to="/">
-          <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
+          <img width={280} src="/image/musinsa-logo.png" alt="hm-logo.png" />
         </Link>
-        <div className="sidebar-item">Admin Account</div>
         <ul className="sidebar-area">
           <li
-            className="sidebar-item"
+            className="sidebar-item text-white"
             onClick={() => handleSelectMenu("/admin/product?page=1")}
           >
             product
           </li>
           <li
-            className="sidebar-item"
+            className="sidebar-item text-white"
             onClick={() => handleSelectMenu("/admin/order?page=1")}
           >
             order
@@ -39,25 +38,26 @@ const Sidebar = () => {
     <>
       <div className="sidebar-toggle">{NavbarContent()}</div>
 
-      <Navbar bg="light" expand={false} className="mobile-sidebar-toggle">
-        <Container fluid>
-          <img width={80} src="/image/hm-logo.png" alt="hm-logo.png" />
+      <Navbar bg="black" expand={false} className="mobile-sidebar-toggle flex items-center justify">
+        <img src="/image/musinsa-logo.png" alt="musinsa-logo.png" />
+        <Container fluid className="p-0">
           <Navbar.Brand href="#"></Navbar.Brand>
-          <Navbar.Toggle
-            aria-controls={`offcanvasNavbar-expand`}
-            onClick={() => setShow(true)}
-          />
-          <Navbar.Offcanvas
-            id={`offcanvasNavbar-expand`}
-            aria-labelledby={`offcanvasNavbarLabel-expand`}
-            placement="start"
-            className="sidebar"
-            show={show}
-          >
-            <Offcanvas.Header closeButton></Offcanvas.Header>
-            <Offcanvas.Body>{NavbarContent()}</Offcanvas.Body>
-          </Navbar.Offcanvas>
+          
         </Container>
+          <ul className="sidebar-area flex items-center justify-center p-0 m-0">
+            <li
+              className="sidebar-item text-white"
+              onClick={() => handleSelectMenu("/admin/product?page=1")}
+            >
+              product
+            </li>
+            <li
+              className="sidebar-item text-white"
+              onClick={() => handleSelectMenu("/admin/order?page=1")}
+            >
+              order
+            </li>
+          </ul>
       </Navbar>
     </>
   );
