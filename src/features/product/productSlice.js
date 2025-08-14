@@ -97,10 +97,10 @@ const productSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    .addCase(createProduct.pending,(state,action)=>{
+    .addCase(createProduct.pending,(state)=>{
       state.loading = true;
     })
-    .addCase(createProduct.fulfilled,(state,action)=>{
+    .addCase(createProduct.fulfilled,(state)=>{
       state.loading = false;
       state.error = '';
       state.success = true;
@@ -110,7 +110,7 @@ const productSlice = createSlice({
       state.error = action.payload;
       state.success = false;
     })
-    .addCase(getProductList.pending,(state,action)=>{
+    .addCase(getProductList.pending,(state)=>{
       state.loading = true;
     })
     .addCase(getProductList.fulfilled,(state,action)=>{
@@ -124,10 +124,10 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     })
-    .addCase(editProduct.pending, (state, action) => {
+    .addCase(editProduct.pending, (state) => {
       state.loading = true;
     })
-    .addCase(editProduct.fulfilled, (state, action) => {
+    .addCase(editProduct.fulfilled, (state) => {
       state.loading = false;
       state.error = '';
       state.success = true;
@@ -137,10 +137,10 @@ const productSlice = createSlice({
       state.error = action.payload;
       state.success = false;
     })
-    .addCase(deleteProduct.pending, (state,action) => {
+    .addCase(deleteProduct.pending, (state) => {
       state.loading = true;
     })
-    .addCase(deleteProduct.fulfilled, (state,action) => {
+    .addCase(deleteProduct.fulfilled, (state) => {
       state.loading = false;
       state.error = '';
       state.success = true;
@@ -150,7 +150,7 @@ const productSlice = createSlice({
       state.error = action.payload;
       state.success = false;
     })
-    .addCase(getProductDetail.pending, (state,action)=>{
+    .addCase(getProductDetail.pending, (state)=>{
       state.loading = true;
     })
     .addCase(getProductDetail.fulfilled, (state,action)=>{

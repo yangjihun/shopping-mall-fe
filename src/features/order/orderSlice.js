@@ -31,7 +31,7 @@ export const createOrder = createAsyncThunk(
 
 export const getOrder = createAsyncThunk(
   "order/getOrder",
-  async (_, { rejectWithValue, dispatch }) => {
+  async (_, { rejectWithValue }) => {
     try{
       const response = await api.get('/order');
       return response.data.data;
@@ -43,7 +43,7 @@ export const getOrder = createAsyncThunk(
 
 export const getOrderList = createAsyncThunk(
   "order/getOrderList",
-  async (query, { rejectWithValue, dispatch }) => {
+  async (query, { rejectWithValue }) => {
     try{
       const response = await api.get('/order/admin',{params: {...query}});
       return response.data;
@@ -78,7 +78,7 @@ const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createOrder.pending,(state,action)=>{
+      .addCase(createOrder.pending,(state)=>{
         state.loading = true;
       })
       .addCase(createOrder.fulfilled,(state,action)=>{
@@ -90,7 +90,7 @@ const orderSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getOrder.pending,(state,action)=>{
+      .addCase(getOrder.pending,(state)=>{
         state.loading = true;
       })
       .addCase(getOrder.fulfilled,(state,action)=>{
@@ -102,7 +102,7 @@ const orderSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getOrderList.pending,(state,action)=>{
+      .addCase(getOrderList.pending,(state)=>{
         state.loading = true;
       })
       .addCase(getOrderList.fulfilled,(state,action)=>{
@@ -115,10 +115,10 @@ const orderSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(updateOrder.pending,(state,action)=>{
+      .addCase(updateOrder.pending,(state)=>{
         state.loading = true;
       })
-      .addCase(updateOrder.fulfilled,(state,action)=>{
+      .addCase(updateOrder.fulfilled,(state)=>{
         state.loading = false;
         state.error = '';
       })

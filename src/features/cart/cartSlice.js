@@ -14,7 +14,7 @@ const initialState = {
 // Async thunk actions
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ id, size }, { rejectWithValue, dispatch }) => {
+  async ({ id, size }, { dispatch }) => {
     try{
       const response = await api.post('/cart', {productId:id, size, qty:1});
       dispatch(showToastMessage({message:'카트에 아이템이 추가됐습니다', status:'success'}));
@@ -69,7 +69,7 @@ export const updateQty = createAsyncThunk(
 
 export const getCartQty = createAsyncThunk(
   "cart/getCartQty",
-  async (_, { rejectWithValue, dispatch }) => {
+  async (_, { rejectWithValue }) => {
     try{
       const response = await api.get('/cart');
       return response.data.cartItemQty;
@@ -86,7 +86,6 @@ const cartSlice = createSlice({
     initialCart: (state) => {
       state.cartItemCount = 0;
     },
-    // You can still add reducers here for non-async actions if necessary
   },
   extraReducers: (builder) => {
     builder
@@ -135,7 +134,7 @@ const cartSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getCartQty.pending, (state,action)=>{
+      .addCase(getCartQty.pending, (state)=>{
         state.loading = true;
       })
       .addCase(getCartQty.fulfilled, (state,action)=>{
@@ -147,7 +146,7 @@ const cartSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deleteCartItem.pending,(state,action)=>{
+      .addCase(deleteCartItem.pending,(state)=>{
         state.loading = true;
       })
       .addCase(deleteCartItem.fulfilled,(state,action)=>{
