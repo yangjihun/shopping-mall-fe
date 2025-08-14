@@ -86,7 +86,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     const totalStock = stock.reduce((total,item)=>{
       return {...total,[item[0]]:parseInt(item[1])}
     },{});
-    console.log(totalStock);
     // [['M',2]] 에서 {M:2}로
     if (mode === "new") {
       //새 상품 만들기

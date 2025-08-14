@@ -13,7 +13,6 @@ const CartPage = () => {
 
   useEffect(() => {
     dispatch(getCartList());
-    console.log("hihi",cartList);
   }, []);
 
   return (
