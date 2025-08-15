@@ -7,7 +7,7 @@ const ProductCard = ({ item }) => {
     navigate(`/product/${id}`);
   };
   return (
-    <div className="w-80 hover:fill-neutral-500" onClick={() => showProduct(item._id)}>
+    <div className="w-80 hover:fill-neutral-500 cursor-pointer hover:bg-gray-200" onClick={() => showProduct(item._id)}>
       <img src={item?.image} alt={item?.image} className='h-80 w-80' />
       <div>{item?.name}</div>
       <div>₩ {currencyFormat(item?.price)}</div>
