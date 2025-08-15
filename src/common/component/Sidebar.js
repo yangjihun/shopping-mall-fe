@@ -13,7 +13,7 @@ const Sidebar = () => {
 
   const NavbarContent = () => {
     return (
-      <div className="bg-black">
+      <div className="bg-black h-[100vh]">
         <Link to="/">
           <img width={280} src="/image/musinsa-logo.png" alt="hm-logo.png" />
         </Link>
