@@ -11,7 +11,6 @@ export const loginWithEmail = createAsyncThunk(
       sessionStorage.setItem("token",response.data.token);
       return response.data;
     } catch(error){
-      // 실패시 생긴 에러값을 reducer에 저장
       return rejectWithValue(error.error);
     }
   }
@@ -19,7 +18,16 @@ export const loginWithEmail = createAsyncThunk(
 
 export const loginWithGoogle = createAsyncThunk(
   "user/loginWithGoogle",
-  async (token, { rejectWithValue }) => {}
+  async (token, { rejectWithValue }) => {
+    try{
+      const response = await api.post('/auth/google',{token});
+      console.log(response);
+      sessionStorage.setItem("token",response.data.token);
+      return response.data.user;
+    } catch(error){
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const logout = () => async(dispatch) => {
@@ -40,14 +48,10 @@ export const registerUser = createAsyncThunk(
   ) => {
     try{
       const response = await api.post('/user',{email,name,password});
-      // 1. 성공 토스트 메세지 보여주기
-      // 2. 로그인 페이지로 리다이렉트
       dispatch(showToastMessage({message:"회원가입을 성공했습니다", status:"success"}));
       navigate('/login');
       return response.data.data;
     }catch(error){
-      // 1. 실패 토스트 메세지를 보여준다
-      // 2. 에러값을 저장한다
       dispatch(showToastMessage({message:"회원가입에 실패했습니다", status:"error"}));
       return rejectWithValue(error.error);
     }
@@ -112,6 +116,18 @@ const userSlice = createSlice({
     })
     .addCase(loginWithToken.fulfilled,(state,action)=>{
       state.user = action.payload.user;
+    })
+    .addCase(loginWithGoogle.pending, (state)=>{
+      state.loading = true;
+    })
+    .addCase(loginWithGoogle.fulfilled, (state,action)=>{
+      state.loading = false;
+      state.user = action.payload;
+      state.loginError = null;
+    })
+    .addCase(loginWithGoogle.rejected, (state,action)=>{
+      state.loading = false;
+      state.loginError = action.payload;
     })
   },
 });
