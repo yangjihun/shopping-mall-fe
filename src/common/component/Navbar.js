@@ -6,13 +6,14 @@ import { Link, createSearchParams, useNavigate, useSearchParams } from "react-ro
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/user/userSlice";
 import { getCartQty } from "../../features/cart/cartSlice";
+import { CATEGORY } from "../../constants/product.constants";
 
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const selectedCategory = searchParams.get("category") || "";
-  const menuList = ["All", "Top", "Dress", "Pants"];
+  const menuList = ["All", ...CATEGORY];
 
   const goToWithQuery = (params = {}) => {
     navigate({
@@ -49,7 +50,7 @@ const Navbar = ({ user }) => {
           </Link>
         </div>
 
-        <ul className="flex gap-4 items-center justify-center md:pt-12">
+        <ul className="flex gap-4 items-center justify-center md:pt-12 overflow-x-auto whitespace-nowrap px-4 md:px-0">
           {menuList.map((menu, index) => {
             const isSelected =
               (menu === "All" && !selectedCategory) ||

@@ -43,7 +43,7 @@ const LandingPage = () => {
   return (
     <Container>
       {productList.length > 0 ? (
-        <div className="grid grid-cols-4 gap-0 w-full">
+        <div className="md:grid grid-cols-4 gap-0 w-full">
           {productList.map((item) => (
             <div key={item._id}>
               <ProductCard item={item} />

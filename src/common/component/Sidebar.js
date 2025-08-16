@@ -1,13 +1,9 @@
-import React, { useState } from "react";
-import { Offcanvas, Navbar, Container } from "react-bootstrap";
+import { Navbar, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const [show, setShow] = useState(false);
-
   const handleSelectMenu = (url) => {
-    setShow(false);
     navigate(url);
   };
 
@@ -39,7 +35,9 @@ const Sidebar = () => {
       <div className="sidebar-toggle">{NavbarContent()}</div>
 
       <Navbar bg="black" expand={false} className="mobile-sidebar-toggle flex items-center justify">
-        <img src="/image/musinsa-logo.png" alt="musinsa-logo.png" />
+        <Link to="/">
+          <img src="/image/musinsa-logo.png" alt="hm-logo.png" />
+        </Link>
         <Container fluid className="p-0">
           <Navbar.Brand href="#"></Navbar.Brand>
           
